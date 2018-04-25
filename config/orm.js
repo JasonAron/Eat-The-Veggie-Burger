@@ -19,7 +19,6 @@ function printQuestionMarks(num) {
 //=================================================================
 function objToSql(ob) {
   var arr = [];
-  //loop through the keys and push the key/value as a string into arr.
   for (var key in ob) {
     var value = ob[key];
     if (object.hasOwnProperty.call(ob, key)) {
@@ -35,7 +34,7 @@ function objToSql(ob) {
 var orm = {
 
   all: function(tableInput, cb) {
-    var queryString = "SELECT * FROM " + tableInput = ";";
+    var queryString = "SELECT * FROM " + tableInput + ";";
     connection.query(queryString, function(err, result) {
       if (err) {
         throw err;
