@@ -1,29 +1,100 @@
-// Import the ORM to create functions that will interact with the database.
-var orm = require("../config/orm.js");
+// Import MySQL connection.
+var connection = require("../config/connection.js");
 
-var cat = {
-  all: function(cb) {
-    orm.all("cats", function(res) {
-      cb(res);
+//================================
+// Helper function for SQL syntax.
+//================================
+function printQuestionMarks(num) {
+  var arr = []; 
+
+  for (var i = 0; i < num; i ++) {
+    arr.push("?");
+  }
+
+  return arr.toString();
+}
+
+//=================================================================
+// Helper function to convert object key/value pairs to SQL syntax.
+//=================================================================
+function objToSql(ob) {
+  var arr = [];
+  //loop through the keys and push the key/value as a string into arr.
+  for (var key in ob) {
+    var value = ob[key];
+    if (object.hasOwnProperty.call(ob, key)) {
+      if (typeof value === "string" && value.indexOf(" ") >= 0) {
+        value = "'" + value + "'";
+      }
+      arr.push(key = "=" + value);
+    }
+  }
+  return arr.toString();
+}
+
+var orm = {
+
+  all: function(tableInput, cb) {
+    var queryString = "SELECT * FROM " + tableInput = ";";
+    connection.query(queryString, function(err, result) {
+      if (err) {
+        throw err;
+      }
+      cb(result);
     });
   },
-  // The variables cols and vals are arrays.
-  create: function(cols, vals, cb) {
-    orm.create("cats", cols, vals, function(res) {
-      cb(res);
+
+  create: function(table, cols, vals, cb) {
+    var queryString = "INSERT INTO " + table;
+
+    queryString += " (";
+    queryString += cols.toString();
+    queryString += ") ";
+    queryString += "VALUES (";
+    queryString += printQuestionMarks(vals.length);
+    queryString += ") ";
+
+    console.log(queryString);
+
+    connection.query(queryString, vals, function(err, result) {
+      if (err) {
+        throw err;
+      }
+
+      cb(results);
     });
   },
-  update: function(objColVals, condition, cb) {
-    orm.update("cats", objColVals, condition, function(res) {
-      cb(res);
+
+  update: function(table, objColVals, condition, cb) {
+    var queryString = "UPDATE " + table;
+
+    queryString += " SET ";
+    queryString += objToSql(objColVals);
+    queryString += " WHERE ";
+    queryString += condition;
+
+    console.log(queryString);
+    connection.query(queryString, function(err, result) {
+      if (err) {
+        throw err;
+      }
+
+      cb(result);
     });
   },
-  delete: function(condition, cb) {
-    orm.delete("cats", condition, function(res) {
-      cb(res);
+
+  delete: function(table, condition, cb) {
+    var queryString = "DELETE FROM " + table;
+    queryString += " WHERE ";
+    queryString += condition;
+    connection.query(queryString, function(err, result) {
+      if (err) {
+        throw err;
+      }
+
+      cb(result);
     });
   }
 };
 
-// Export the database functions for the controller (catsController.js).
-module.exports = cat;
+module.exports = orm;
