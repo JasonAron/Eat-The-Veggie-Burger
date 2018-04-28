@@ -2,14 +2,14 @@
 {{name}}
 
 {{#if devoured}}
-	<button class="change-devoured" data-id="{{id}}" data-newdevour="{{devoured}}">
-		DEVOUR IT!
+	<button class="change-devoured waves-effect waves-light btn" data-id="{{id}}" data-newdevour="{{devoured}}">
+		DEVOUR
 	</button>
 	{{/if}}
 
 {{#unless devoured}}
-	<button class="delete-burger" data-id="{{this.id}}">
-		DELETE!
+	<button class="delete-burger waves-effect waves-light btn" data-id="{{this.id}}">
+		DELETE
 	</button>
 	{{/unless}}
 </div>
